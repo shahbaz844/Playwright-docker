@@ -1,0 +1,69 @@
+{
+  "name": "digitalcertificates",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prepare": "husky install",
+    "test": "npx playwright test",
+    "headed:test": "npx playwright test --headed",
+    "smoke:headed": "npx playwright test --grep '@smoke' --headed",
+    "smoke": "npx playwright test --grep '@smoke'",
+    "regression:headed": "npx playwright test --grep '@regression' --headed",
+    "regression": "npx playwright test --grep '@regression'",
+    "html:report": "npx playwright show-report",
+    "tests:allure": "npx playwright test --reporter=allure-playwright",
+    "serve:allure": "allure generate allure-results -o allure-report --clean && allure open allure-report",
+    "format": "prettier --write .",
+    "lint": "eslint $(git diff --name-only --cached --diff-filter=ACMRT | grep '\\.ts$')",
+    "lint:fix": "eslint $(git diff --name-only --cached --diff-filter=ACMRT | grep '\\.ts$') --fix"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*/.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*/.{js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*/.{json,md,yml}": [
+      "prettier --write"
+    ]
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@faker-js/faker": "^9.0.3",
+    "@fast-csv/parse": "^5.0.0",
+    "@playwright/test": "^1.49.0",
+    "axios": "^1.7.7"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.1",
+    "@fast-csv/parse": "^5.0.2",
+    "@stylistic/eslint-plugin-js": "^2.11.0",
+    "@types/node": "^22.5.0",
+    "@typescript-eslint/eslint-plugin": "^8.17.0",
+    "@typescript-eslint/parser": "^8.17.0",
+    "@typescript-eslint/typescript-estree": "^8.17.0",
+    "allure-commandline": "^2.30.0",
+    "allure-playwright": "^3.0.0-beta.10",
+    "dotenv": "^16.4.5",
+    "eslint": "9.16",
+    "eslint-plugin-playwright": "^1.8.3",
+    "eslint-plugin-prettier": "^5.2.1",
+    "husky": "^8.0.0",
+    "moment": "^2.30.1",
+    "playwright": "^1.34.0",
+    "playwright-msteams-reporter": "^0.0.12",
+    "prettier": "^3.4.2",
+    "typescript": "^4.9.4"
+  }
+}

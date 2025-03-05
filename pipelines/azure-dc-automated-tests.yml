@@ -1,0 +1,48 @@
+name: Playwright Tests $(envName)
+
+#trigger:  disabled, to enable when we have the token
+#  - main
+
+# Disable other triggers
+trigger: none
+pr: none
+
+variables:
+  RunningOnPipeline: true
+
+jobs:
+  - job: test
+    timeoutInMinutes: 0
+    pool:
+      name: "Digital Ocean"
+
+    steps:
+      # Install Node.js
+      - task: NodeTool@0
+        inputs:
+          versionSpec: "16.x"
+        displayName: "Install Node.js"
+
+      # Install project dependencies
+      - script: |
+          npm ci
+        displayName: "Install dependencies"
+
+      # Install Playwright browsers with necessary dependencies
+      - script: |
+          npx playwright install --with-deps
+        displayName: "Install Playwright browsers"
+
+      # Run Playwright tests
+      - script: |
+          export RunningOnPipeline=$(RunningOnPipeline)
+          export envName=$(envName)
+          echo "Running on pipeline: $RunningOnPipeline"
+          echo "Environment name: $envName"
+          npx playwright test --grep "@$envName" --config=playwright.prod.config.ts
+        displayName: "Run Playwright tests"
+
+      # Publish Allure report
+      - task: PublishAllureReport@1
+        displayName: "Publish Allure report"
+        condition: always()

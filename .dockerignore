@@ -1,0 +1,7 @@
+node_modules
+dist
+*.log
+.idea
+.vscode
+allure-results
+test-results
