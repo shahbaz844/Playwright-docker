@@ -11,4 +11,4 @@ node_modules/
 src/.DS_Store
 src/tests/paymentGateway/.DS_Store
 src/tests/.DS_Store
-playwright.config.ts
+playwright.prod.config.ts
