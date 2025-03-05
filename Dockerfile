@@ -19,5 +19,13 @@ RUN npx playwright install --with-deps
 # Set the command to run your tests using Playwright test runner
 CMD ["npx", "playwright", "test"]
 
+# Check docker versions
+# docker images
+
 # Run command to build image
 # docker build -t playwright-typescript .
+# This command tells Docker to build an image named playwright-typescript using the Dockerfile in the current directory (.).
+
+# Run docker image
+# docker run --rm playwright-typescript
+#--rm flag ensures that the container is removed after it stops.

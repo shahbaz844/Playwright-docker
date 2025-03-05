@@ -1,0 +1,51 @@
+name: Playwright with Docker
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Pull and Run Playwright Docker Container
+        run: |
+          docker pull shahbazshah321/playwright-typescript:latest
+          docker run -d --name playwright-container -v ${{ github.workspace }}:/workspace shahbazshah321/playwright-typescript:latest
+
+      - name: Install Dependencies
+        run: docker exec playwright-container npm install
+
+      - name: Install Playwright Browsers
+        run: docker exec playwright-container npx playwright install --with-deps
+
+      - name: Run Playwright Tests with Allure
+        run: |
+          docker exec playwright-container npx playwright test --reporter=line,allure-playwright || true
+
+      - name: Get Allure History
+        uses: actions/checkout@v3
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Generate Allure Report
+        uses: simple-elf/allure-report-action@master
+        if: always()
+        with:
+          allure_results: allure-results
+          allure_history: allure-history
+          keep_reports: 20
+
+      - name: Deploy Allure Report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PUBLISH_BRANCH: gh-pages
+          PUBLISH_DIR: ./allure-report
